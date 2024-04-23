@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/ekkkkkknoes/TagVault/cmd"
@@ -10,6 +10,7 @@ import (
 func main() {
 	app := cmd.CreateApp()
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, "Error:", err)
+		os.Exit(1)
 	}
 }

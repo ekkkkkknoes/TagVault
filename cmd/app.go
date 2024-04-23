@@ -1,12 +1,28 @@
 package cmd
 
 import (
+	"fmt"
+
+	"github.com/ekkkkkknoes/TagVault/tagdb"
 	"github.com/urfave/cli/v2"
 )
 
 type Cmd struct {
 	app      *cli.App
 	vaultdir string
+	tdb      *tagdb.TagDB
+}
+
+func (cmd *Cmd) opendb(cCtx *cli.Context) error {
+	dbpath, err := tagdb.GetDBPath(cmd.vaultdir)
+	if err != nil {
+		return err
+	}
+	if dbpath == "" {
+		return fmt.Errorf("no tagdb found, use TagVault init")
+	}
+	cmd.tdb, err = tagdb.Open(dbpath)
+	return err
 }
 
 func (cmd *Cmd) Run(arguments []string) error {
@@ -100,7 +116,11 @@ func CreateApp() Cmd {
 				Name: "tag",
 				Subcommands: []*cli.Command{
 					{
-						Name: "new",
+						Name:      "new",
+						Action:    cmd.tagnew,
+						Args:      true,
+						ArgsUsage: "<tagname>",
+						Before:    cmd.opendb,
 					},
 					{
 						Name: "alias",
