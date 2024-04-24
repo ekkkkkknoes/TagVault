@@ -123,13 +123,25 @@ func CreateApp() Cmd {
 						Before:    cmd.opendb,
 					},
 					{
-						Name: "alias",
+						Name:      "alias",
+						Action:    cmd.tagalias,
+						Args:      true,
+						ArgsUsage: "<tagname> <aliasname> [aliasname]...",
+						Before:    cmd.opendb,
 					},
 					{
-						Name: "unalias",
-					},
-					{
-						Name: "remove",
+						Name:      "remove",
+						Action:    cmd.removetag,
+						Args:      true,
+						ArgsUsage: "<tagname> [tagname]...",
+						Before:    cmd.opendb,
+						Flags: []cli.Flag{
+							&cli.BoolFlag{
+								Name:    "force",
+								Aliases: []string{"f"},
+								Usage:   "Remove the tag(s) even if it's the last alias and a file has been tagged with it",
+							},
+						},
 					},
 				},
 			},

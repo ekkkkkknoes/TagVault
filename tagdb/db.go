@@ -12,7 +12,7 @@ type TagDB struct {
 
 func Open(dbpath string) (*TagDB, error) {
 	tdb := TagDB{}
-	db, err := sql.Open("sqlite3", dbpath)
+	db, err := sql.Open("sqlite3", dbpath+"?_fk=true")
 	tdb.db = db
 	return &tdb, err
 }
@@ -50,7 +50,7 @@ func Initdb(dbpath string) error {
 	);
 	CREATE TABLE taggings(
 		fileid INTEGER NOT NULL REFERENCES files(fileid),
-		tagid INTEGER NOT NULL REFERENCES tags(tagid),
+		tagid INTEGER NOT NULL,
 		PRIMARY KEY(fileid, tagid)
 	);
 	`)
